@@ -7,7 +7,11 @@ const BUNNY_STORAGE_USERNAME = process.env.BUNNY_STORAGE_USERNAME;
 
 // Should look like https://storage.bunnycdn.com/100xdevs
 const BUNNY_STORAGE_BASE_URL =
-  "https://" + BUNNY_STORAGE_HOSTNAME + "/" + BUNNY_STORAGE_USERNAME + "/";
+  "https://" +
+  BUNNY_STORAGE_HOSTNAME +
+  "/" +
+  BUNNY_STORAGE_USERNAME +
+  "/cohort3/";
 
 export const uploadToBunnyStorage = async (
   filePath: string,
