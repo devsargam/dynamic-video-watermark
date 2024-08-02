@@ -17,7 +17,7 @@ app.get("/", (_, res) => {
 });
 
 app.post("/upload", (req, res) => {
-  multiUpload(req, res, (err) => {
+  multiUpload(req, res, async (err) => {
     if (err) {
       return res.sendStatus(400);
     }
@@ -27,14 +27,14 @@ app.post("/upload", (req, res) => {
     // @ts-ignore
     const watermarkedVideoPath = req.files.watermarked[0].path;
 
-    // Upload to Bunny Storage
-    uploadToBunnyStorage(
-      plainVideoPath,
-      `${uniqueCuid}/${req.file?.originalname}`
-    );
+    // Upload the main video file
+    uploadToBunnyStorage(plainVideoPath, `${uniqueCuid}/video.mp4`);
     bitrateService(plainVideoPath, uniqueCuid, "plain");
     bitrateService(watermarkedVideoPath, uniqueCuid, "watermarked");
-    return res.sendStatus(201);
+
+    return res.status(201).send({
+      id: uniqueCuid,
+    });
   });
 });
 
