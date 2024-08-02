@@ -16,6 +16,7 @@ export const uploadToBunnyStorage = async (
   const fileStream = fs.createReadStream(filePath);
   const url = BUNNY_STORAGE_BASE_URL + destination;
 
+  console.log("Uploading to Bunny Storage...");
   try {
     await axios.put(url, fileStream, {
       headers: {
@@ -23,6 +24,8 @@ export const uploadToBunnyStorage = async (
         "Content-Type": "application/octet-stream",
       },
     });
+
+    console.log("Upload successful");
     // @ts-ignore
   } catch (error: AxiosError<unknown>) {
     console.log(error);
