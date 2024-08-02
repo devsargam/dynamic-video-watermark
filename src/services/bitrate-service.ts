@@ -59,7 +59,6 @@ export const bitrateService = async (fileName: string, cuid: string) => {
         command.input(watermarkedPath).complexFilter([
           {
             filter: "scale",
-            // options: { w: 'iw*0.1', h: 'ih*0.1' },
             options: { w: "iw", h: "ih" },
             inputs: "1:v",
             outputs: "scaled",
@@ -71,12 +70,17 @@ export const bitrateService = async (fileName: string, cuid: string) => {
           },
         ]);
       }
+      let count = 0;
 
       command
         .outputOptions(options)
         .on("progress", (progress) => {
+          count++;
+          if (count % 5 !== 0) return;
           console.log(
-            `Processing: ${type} ${resolution.name} = ${progress.percent}% done`
+            `Processing: ${type} ${resolution.name} ${progress.percent.toFixed(
+              1
+            )}% done`
           );
         })
         .on("end", async () => {
