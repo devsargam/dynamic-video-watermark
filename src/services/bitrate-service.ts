@@ -1,10 +1,15 @@
 import ffmpeg from "fluent-ffmpeg";
 import path from "path";
 import fs from "fs";
+import {
+  uploadQualityToBunny,
+  VideoQuality,
+  VideoType,
+} from "./upload-service";
 
-export const bitrateService = async (fileName: string) => {
+export const bitrateService = async (fileName: string, cuid: string) => {
   const filePath = path.join(__dirname, "../..", "uploads", fileName);
-  const convertedDir = path.join(__dirname, "../..", "converted");
+  const convertedDir = path.join(__dirname, "../..", "converted", cuid);
 
   const resolutions = [
     // { name: "1080p", size: "1920x1080" },
@@ -74,8 +79,13 @@ export const bitrateService = async (fileName: string) => {
             `Processing: ${type} ${resolution.name} = ${progress.percent}% done`
           );
         })
-        .on("end", () => {
+        .on("end", async () => {
           console.log(`Converted to ${type} HLS ${resolution.name}`);
+          await uploadQualityToBunny(
+            cuid,
+            type as VideoType,
+            resolution.name as VideoQuality
+          );
         })
         .on("error", (err) => {
           console.error(
