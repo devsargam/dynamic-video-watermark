@@ -30,6 +30,7 @@ program
       )}_watermarked${path.extname(inputVideo)}`
     );
 
+    let count = 0;
     ffmpeg(inputVideo)
       .input(watermarkImage)
       .complexFilter([
@@ -39,6 +40,15 @@ program
         },
       ])
       .output(outputVideo)
+      .on("start", (cmd) => {
+        console.log(`Executing: ${cmd}`);
+      })
+      .on("progress", (progress) => {
+        count++;
+        if (count % 5 === 0) return;
+
+        console.log(`Processing: ${progress.percent.toFixed(1)}% done`);
+      })
       .on("end", () => {
         console.log(
           `Watermark added successfully! Output file: ${outputVideo}`
